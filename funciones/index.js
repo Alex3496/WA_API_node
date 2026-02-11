@@ -194,7 +194,7 @@ async function getTemplates(params) {
 
 
 try{
-    sendTemplateMessage();
+    sentTextMessage();
 }catch(e){
     console.error('Error sending message:', e.response ? e.response.data : e.message);
 }
