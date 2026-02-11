@@ -178,8 +178,23 @@ async function uploadImageToAPIWS() {
 
 }
 
+
+async function getTemplates(params) {
+    const  response = await axios({
+        url: `${process.env.APP_WHATSAPP_API_URL}/${process.env.APP_WHATSAPP_BUSINESS_ID}/message_templates`,
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${process.env.APP_WHATSAPP_TOKEN}`
+        }
+    });
+
+    console.log('Templates:',require('util').inspect(response.data, {depth: null}));
+}
+
+
+
 try{
-    sentMediaMessage();
+    getTemplates();
 }catch(e){
     console.error('Error sending message:', e.response ? e.response.data : e.message);
 }
