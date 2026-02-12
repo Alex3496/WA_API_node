@@ -85,6 +85,46 @@ class WhatsAppService {
         }
     }
 
+    async sendMediaMessage(to, type, mediaURL, caption = "") {
+        try {
+            const mediaObject = {}
+
+            switch(type){
+                case "image":
+                    mediaObject.image = { link: mediaURL, caption };
+                    break;
+                case "video":
+                    mediaObject.video = { link: mediaURL, caption };
+                    break;
+                case "audio":
+                    mediaObject.audio = { link: mediaURL };
+                    break;
+                case "document":
+                    mediaObject.document = { link: mediaURL, caption, filename: 'foo.pdf' };
+                    break;
+                default:
+                    throw new Error("Unsupported media type");
+            }
+
+            await axios({
+                method: "POST",
+                url: `https://graph.facebook.com/${config.API_VERSION}/${config.PHONE_NUMBER_ID}/messages`,
+                headers: {
+                    Authorization: `Bearer ${config.APP_WHATSAPP_TOKEN}`,
+                },
+                data: {
+                    messaging_product: "whatsapp",
+                    to,
+                    type,
+                    ...mediaObject
+                },
+            });
+
+        }catch(error){
+            console.error("Error sending media message:", error.response?.data || error.message);
+        }
+    }
+
 }
 
 export default new WhatsAppService();

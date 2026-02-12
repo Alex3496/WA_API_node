@@ -24,7 +24,9 @@ class MessageHandler {
                 await this.sendWelcomeMessage(from, message.id, sernderInfo);
                 await this.sendWelcomeMenu(from);
                 return;
-            }else{
+            }else if (incomingText.includes("media")) {
+                await this.sendMedia(from);
+            } else {
                 const response = `Echo: ${message.text.body}`;
                 await whatsappService.sendMessage(
                     from,
@@ -84,6 +86,11 @@ class MessageHandler {
         await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
     }
 
+    /**
+     * @Devueleve una respuesta basada en la opción seleccionada por el usuario en el menú interactivo.
+     * @param {string} to - Número de teléfono del destinatario. 
+     * @param {string} option - Opción seleccionada por el usuario.
+     */
     async handleMenuOption(to, option){
         let response = "";
         switch(option){
@@ -100,6 +107,14 @@ class MessageHandler {
                 response = "Lo siento, no entendí tu selección. Por favor elige una opción del menú.";
         }
         await whatsappService.sendMessage(to, response);
+    }
+
+    async sendMedia(to){
+        let mediaUrl = "https://s3.amazonaws.com/gndx.dev/medpet-audio.aac";
+        let caption = "Bienvenida";
+        let type = "audio";
+
+        await whatsappService.sendMediaMessage(to, type, mediaUrl, caption);
     }
 }
 
