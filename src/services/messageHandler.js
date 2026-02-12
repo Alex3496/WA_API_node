@@ -33,6 +33,11 @@ class MessageHandler {
                 );
             }
             await whatsappService.markAsRead(message.id);
+        }else if (  message?.type === "interactive" && message.interactive.type === "button_reply") {
+            console.log("Received button reply:", JSON.stringify(message, null, 2));
+            const option = message?.interactive?.button_reply?.title?.toLowerCase().trim() || "";
+            await this.handleMenuOption(from, option);
+            await whatsappService.markAsRead(message.id);
         }
     }
 
@@ -48,31 +53,53 @@ class MessageHandler {
         await whatsappService.sendMessage(to, welcomeMessage, messageId);
     }
 
+    /**
+     * @description Envia un menú de opciones al usuario.
+     * @param {string} to - Número de teléfono del destinatario.
+     */
     async sendWelcomeMenu(to){
         const menuMessage = "Elige una opción"
         const buttons = [
             {
                 type: "reply",
                 reply: {
-                    id: "option_1",
+                    id: "agendar_cita",
                     title: "Agendar una cita"
                 },
             },{
                 type: "reply",
                 reply: {
-                    id: "option_2",
+                    id: "consultar",
                     title: "Consultar"
                 },
             },{
                 type: "reply",
                 reply: {
-                    id: "option_3",
+                    id: "ubicacion",
                     title: "Ubicación"
                 },
             }
         ]
 
         await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
+    }
+
+    async handleMenuOption(to, option){
+        let response = "";
+        switch(option){
+            case "agendar una cita":
+                response = "Para agendar una cita, por favor visita nuestro sitio web: https://www.ejemplo.com/citas";
+                break;
+            case "consultar":
+                response = "Para consultas, por favor llama a nuestro número de atención al cliente: +52 55 1234 5678";
+                break;
+            case "ubicación":
+                response = "Nuestra ubicación es: Calle Falsa 123, Ciudad, País.";
+                break;
+            default:
+                response = "Lo siento, no entendí tu selección. Por favor elige una opción del menú.";
+        }
+        await whatsappService.sendMessage(to, response);
     }
 }
 

@@ -9,7 +9,7 @@ class WhatsAppService {
      * @param {string} body - El contenido del mensaje de texto a enviar.
      * @param {string} messageId - El ID del mensaje original al que se está respondiendo (opcional).
      */
-    async sendMessage(to, body, messageId) {
+    async sendMessage(to, body, messageId = null) {
         try {
             await axios({
                 method: "POST",
@@ -21,9 +21,7 @@ class WhatsAppService {
                     messaging_product: "whatsapp",
                     to,
                     text: { body },
-                    context: {
-                        message_id: messageId,
-                    },
+                    context: messageId ? { message_id: messageId } : undefined,
                 },
             });
         } catch (error) {
