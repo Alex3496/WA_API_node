@@ -9,9 +9,16 @@ class WebhookController {
      * Responde con un estado 200 para indicar que el mensaje fue recibido correctamente
      */
     async handleIncoming(req, res) {
+    
+        //console.log("Received webhook request:", JSON.stringify(req.body, null, 2));
+
         const message = req.body.entry?.[0]?.changes[0]?.value?.messages?.[0];
+        //console.log("Received message:", message);
+        const sernderInfo = req.body.entry?.[0]?.changes[0]?.value?.contacts?.[0];
+        console.log("Sender info:", sernderInfo);
+
         if (message) {
-            await messageHandler.handleIncomingMessage(message);
+            await messageHandler.handleIncomingMessage(message, sernderInfo);
         }
         res.sendStatus(200);
     }
