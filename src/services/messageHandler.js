@@ -22,6 +22,7 @@ class MessageHandler {
 
             if(isGreeting(incomingText)) {
                 await this.sendWelcomeMessage(from, message.id, sernderInfo);
+                await this.sendWelcomeMenu(from);
                 return;
             }else{
                 const response = `Echo: ${message.text.body}`;
@@ -35,12 +36,43 @@ class MessageHandler {
         }
     }
 
+    /**
+     * @description Envía un mensaje de bienvenida al usuario personalizando el saludo.
+     * @param {string} to - Número de teléfono del destinatario.
+     * @param {string} messageId - ID del mensaje original.
+     * @param {Object} sernderInfo - Información del remitente del mensaje.
+     */
     async sendWelcomeMessage(to, messageId, sernderInfo) {
-
         const name = getSenderName(sernderInfo);
-
         const welcomeMessage = `¡Hola ${name}! Gracias por contactarnos. ¿En qué puedo ayudarte hoy?`;
         await whatsappService.sendMessage(to, welcomeMessage, messageId);
+    }
+
+    async sendWelcomeMenu(to){
+        const menuMessage = "Elige una opción"
+        const buttons = [
+            {
+                type: "reply",
+                reply: {
+                    id: "option_1",
+                    title: "Agendar una cita"
+                },
+            },{
+                type: "reply",
+                reply: {
+                    id: "option_2",
+                    title: "Consultar"
+                },
+            },{
+                type: "reply",
+                reply: {
+                    id: "option_3",
+                    title: "Ubicación"
+                },
+            }
+        ]
+
+        await whatsappService.sendInteractiveButtons(to, menuMessage, buttons);
     }
 }
 
