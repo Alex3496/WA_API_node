@@ -124,7 +124,8 @@ class MessageHandler {
                 break;
             case "ubicación":
                 response =
-                    "Nuestra ubicación es: Calle Falsa 123, Ciudad, País.";
+                    "Esta es nuestra ubicación. ¡Te esperamos!";
+                await this.sendLocation(to);
                 break;
             case "emergencia":
                 response =
@@ -314,6 +315,17 @@ class MessageHandler {
         };
 
         await whatsappService.sendContactMessage(to, contact);
+    }
+
+    async sendLocation(to) {
+        const location = {
+            latitude: 6.2071694,
+            longitude: -75.574607,
+            name: "MedPet Veterinaria",
+            address: "Cra 43 # 12-34, Medellín, Colombia",
+        };
+
+        await whatsappService.sendLocationMessage(to, location.latitude, location.longitude, location.name, location.address);
     }
 }
 

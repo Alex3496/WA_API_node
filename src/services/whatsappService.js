@@ -133,6 +133,11 @@ class WhatsAppService {
         }
     }
 
+    /**
+     * @description Envía un mensaje de contacto al usuario.
+     * @param {string} to - Número de teléfono del destinatario. 
+     * @param {Object} contactInfo - Información del contacto a enviar.
+     */
     async sendContactMessage(to, contactInfo){
         try {
             await axios({
@@ -151,6 +156,41 @@ class WhatsAppService {
 
         }catch(error){
             console.error("Error sending contact message:", error.response?.data || error.message);
+        }
+    }
+
+    /**
+     * @description Envía un mensaje de ubicación al usuario.
+     * @param {string} to - Número de teléfono del destinatario.
+     * @param {number} latitude - Latitud de la ubicación.
+     * @param {number} longitude - Longitud de la ubicación.
+     * @param {string} name - Nombre de la ubicación.
+     * @param {string} address - Dirección de la ubicación.
+     */
+    async sendLocationMessage(to, latitude, longitude, name = "Ubicación", address = "Dirección no disponible"){
+        try {
+            const locationInfo = {
+                latitude,
+                longitude,
+                name,
+                address
+            };
+            await axios({
+                method: "POST",
+                url: `https://graph.facebook.com/${config.API_VERSION}/${config.PHONE_NUMBER_ID}/messages`,
+                headers: {
+                    Authorization: `Bearer ${config.APP_WHATSAPP_TOKEN}`,
+                },
+                data: {
+                    messaging_product: "whatsapp",
+                    to,
+                    type: "location",
+                    location: locationInfo
+                },
+            });
+
+        }catch(error){
+            console.error("Error sending location message:", error.response?.data || error.message);
         }
     }
 
