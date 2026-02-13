@@ -85,6 +85,13 @@ class WhatsAppService {
         }
     }
 
+    /**
+     * @description Envía un mensaje de medios al usuario.
+     * @param {string} to - Número de teléfono del destinatario.
+     * @param {string} type - Tipo de medio (image, video, audio, document).
+     * @param {string} mediaURL - URL del medio.
+     * @param {string} caption - Texto opcional para el medio.
+     */
     async sendMediaMessage(to, type, mediaURL, caption = "") {
         try {
             const mediaObject = {}
