@@ -12,4 +12,5 @@ export default {
   API_VERSION: process.env.API_VERSION || 'v22.0',
   TO_WHATSAPP_NUMBER: process.env.TO_WHATSAPP_NUMBER,
   WEBHOOK_VERIFY_TOKEN: process.env.WEBHOOK_VERIFY_TOKEN,
+  GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
 };

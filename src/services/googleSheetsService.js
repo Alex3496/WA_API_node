@@ -1,4 +1,5 @@
 import path from "path";
+import config from "../config/env.js";
 import { google } from "googleapis";
 
 const sheets = google.sheets("v4");
@@ -31,7 +32,7 @@ const appendToSheet = async (values) => {
         });
 
         const authClient = await auth.getClient();
-        const spreadsheetId = ""; // Reemplaza con tu ID de hoja de cálculo
+        const spreadsheetId = config.GOOGLE_SHEET_ID; // Reemplaza con tu ID de hoja de cálculo
 
         await addRowToSheet(authClient, spreadsheetId, values);
         return "OK";
