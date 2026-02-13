@@ -1,5 +1,6 @@
 import config from "../config/env.js";
 import whatsappService from "./whatsappService.js";
+import googleSheetsService from "./googleSheetsService.js";
 
 //utils
 import { normalizeWhatsappNumber, isGreeting, getSenderName } from "../utils.js";
@@ -177,9 +178,17 @@ class MessageHandler {
         }
 
         console.log("Cita agendada:", userData);
+        googleSheetsService.appendToSheet([
+            userData.to,
+            userData.name,
+            userData.petName,
+            userData.petType,
+            userData.reason,
+            userData.date
+        ]);
 
         return `Gracias por la información, ${appoinment.name}.
-        
+
         Hemos registrado tu cita para tu ${appoinment.petType} por el motivo: "${appoinment.reason}". 
         Nos pondremos en contacto contigo para confirmar la fecha y hora.`;
     }
